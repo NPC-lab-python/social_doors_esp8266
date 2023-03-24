@@ -189,9 +189,6 @@ void callback(char *topic, byte *payload, unsigned int length)
         {
             moving();
         }
-        if ((char)payload[0] == '2')
-        {
-            moving();
-        }
+
     }
 }
