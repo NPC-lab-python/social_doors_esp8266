@@ -10,7 +10,7 @@ const char * SSID ="maison";
 const char * pass = "galileo@9493!";
 
 // NDE fixe
-IPAddress ip_device(192,168,0,155);
+IPAddress ip_device(192,168,0,115);
 
 IPAddress gateway(192,168,0,1);
 IPAddress subnet(255,255,255,0);

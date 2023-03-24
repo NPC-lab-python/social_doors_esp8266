@@ -51,7 +51,7 @@ void setup()
     pinMode(led_connect_broker, OUTPUT);
     MQTTclient.setServer(server, 1883);
     MQTTclient.setCallback(callback);
-    MQTTclient.setKeepAlive(5);
+    MQTTclient.setKeepAlive(30);
 
     Serial.print(F("Attach servo at pin "));
     Serial.println(servopin);
@@ -97,26 +97,26 @@ void moving()
 {
     Serial.println("move");
 
-    for (angle = 0; angle < 180; angle += 1)
+    for (angle = 0; angle < 140; angle += 1)
     {
         PorteSocial.write(angle);
-        delay(100);
+        delay(50);
     }
-    Serial.println("wait 5 sec");
+    Serial.println("wait 10 sec");
 
     delay(10000);
 
     // move from 180 to 0 degrees with a negative angle of 5
-    for (angle = 180; angle >= 1; angle -= 1)
+    for (angle = 140; angle >= 1; angle -= 1)
     {
         PorteSocial.write(angle);
-        delay(100);
+        delay(50);
     }
 
     delay(1000);
     Serial.println("end move");
 
-    MQTTclient.publish("002/feeders/002PS01/", "OK");
+    MQTTclient.publish("002/doors/002PS01/", "OK");
 }
 
 void onConnected(const WiFiEventStationModeConnected &event)
@@ -142,9 +142,9 @@ void onGotIP(const WiFiEventStationModeGotIP &event)
 
 void MQTTreceive()
 {
-    MQTTclient.subscribe("002/feeders/002PS01/set", 1);
+    MQTTclient.subscribe("002/doors/002PS01/set", 1);
     MQTTclient.publish("devices/connected/002PS01", "True", true);
-    MQTTclient.publish("devices/list/002PS01", "002/feeders/002PS01/", true);
+    MQTTclient.publish("devices/list/002PS01", "002/doors/002PS01/", true);
 }
 
 void MQTTconnect()
@@ -182,9 +182,9 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.println(message);
     Serial.println(topic);
 
-    if (strcmp(topic, "002/feeders/002PS01/set") == 0)
+    if (strcmp(topic, "002/doors/002PS01/set") == 0)
     {
-        Serial.println("Dans topic 002/feeders/002PS01/set");
+        Serial.println("Dans topic 002/doors/002PS01/set");
         if ((char)payload[0] == '1')
         {
             moving();
