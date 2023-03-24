@@ -9,7 +9,7 @@
 WiFiClient porte;
 PubSubClient MQTTclient(porte);
 Servo PorteSocial;
-//#define START_DEGREE_VALUE 0 // The degree value written to the servo at time of attach.
+// #define START_DEGREE_VALUE 0 // The degree value written to the servo at time of attach.
 
 void onConnected(const WiFiEventStationModeConnected &event);
 void onGotIP(const WiFiEventStationModeGotIP &event);
@@ -20,8 +20,7 @@ void MQTTconnect();
 void moving();
 void initmoving();
 
-
-// put your setup code here, to run once:
+bool need_to_send_ack = false;
 
 const int led_connect_broker = 13;  // d7
 const int led_connection_wifi = 15; // d8
@@ -159,6 +158,12 @@ void MQTTconnect()
             Serial.println("connecté au server MQTT");
             Serial.println(server.toString());
             digitalWrite(led_connect_broker, HIGH);
+            if (need_to_send_ack)
+            {
+                Serial.println("SEND DOOR ACK");
+                MQTTclient.publish("002/doors/002PS01/", "OK", true);
+                need_to_send_ack = false;
+            }
             MQTTreceive();
         }
 
@@ -189,6 +194,5 @@ void callback(char *topic, byte *payload, unsigned int length)
         {
             moving();
         }
-
     }
 }
