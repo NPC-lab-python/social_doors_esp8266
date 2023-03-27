@@ -114,13 +114,16 @@ void moving()
 
     delay(1000);
     Serial.println("end move");
-if(!MQTTclient.connected()){
-    Serial.println("client not connected");
-    need_to_send_ack = true;
-}else{
-    MQTTclient.publish("002/doors/002PS01/", "OK");
-    Serial.println("client connected");
-}
+    if (!MQTTclient.connected())
+    {
+        Serial.println("client not connected");
+        need_to_send_ack = true;
+    }
+    else
+    {
+        MQTTclient.publish("002/doors/002PS01/", "OK");
+        Serial.println("client connected");
+    }
 }
 
 void onConnected(const WiFiEventStationModeConnected &event)
