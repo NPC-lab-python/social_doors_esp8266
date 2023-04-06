@@ -50,7 +50,7 @@ void setup()
     pinMode(led_connect_broker, OUTPUT);
     MQTTclient.setServer(server, 1883);
     MQTTclient.setCallback(callback);
-    MQTTclient.setKeepAlive(30);
+    MQTTclient.setKeepAlive(20);
 
     Serial.print(F("Attach servo at pin "));
     Serial.println(servopin);
@@ -96,7 +96,7 @@ void moving()
 {
     Serial.println("move");
 
-    for (angle = 0; angle < 140; angle += 1)
+    for (angle = 5; angle < 140; angle += 1)
     {
         PorteSocial.write(angle);
         delay(50);
@@ -106,7 +106,7 @@ void moving()
     delay(10000);
 
     // move from 180 to 0 degrees with a negative angle of 5
-    for (angle = 140; angle >= 1; angle -= 1)
+    for (angle = 140; angle >= 5; angle -= 1)
     {
         PorteSocial.write(angle);
         delay(50);
@@ -121,7 +121,8 @@ void moving()
     }
     else
     {
-        MQTTclient.publish("002/doors/002PS01/", "OK");
+        MQTTclient.publish("002/doors/002PS01/", "OK", true);
+        need_to_send_ack = false;
         Serial.println("client connected");
     }
 }
